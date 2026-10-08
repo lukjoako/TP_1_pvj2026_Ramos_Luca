@@ -414,6 +414,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 492024208}
   m_CullTransparentMesh: 1
+--- !u!1 &501730552
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 501730554}
+  - component: {fileID: 501730553}
+  m_Layer: 0
+  m_Name: SpawnerObstaculos (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &501730553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501730552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c46cf15a9aa7040a0c68279d37a3e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnerObstaculos
+  prefabObstaculo: {fileID: 4487758704763184152, guid: 38fa733c6e7cd7f47b0fadfe6143eade, type: 3}
+  tiempoInicial: 3
+  intervalo: 5
+--- !u!4 &501730554
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501730552}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.70831996, z: -0, w: 0.7058916}
+  m_LocalPosition: {x: 155, y: 13, z: 107}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90.197, z: 0}
 --- !u!1 &593667299
 GameObject:
   m_ObjectHideFlags: 0
@@ -982,6 +1029,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ControladorVictoria
   cartelVictoria: {fileID: 1579728128}
+--- !u!114 &1253278601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1253278592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b35b9f1c15b036f41839f17cd6c84c4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ControladorVida
+  vidas: 3
 --- !u!1001 &1253475065
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1074,7 +1134,57 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 912130308060207406, guid: 6016bc61f43ced249a1eedaa9dc1321f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1253278600}
+    - targetCorrespondingSourceObject: {fileID: 912130308060207406, guid: 6016bc61f43ced249a1eedaa9dc1321f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1253278601}
   m_SourcePrefab: {fileID: 100100000, guid: 6016bc61f43ced249a1eedaa9dc1321f, type: 3}
+--- !u!1 &1310054693
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1310054695}
+  - component: {fileID: 1310054694}
+  m_Layer: 0
+  m_Name: SpawnerObstaculos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1310054694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310054693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c46cf15a9aa7040a0c68279d37a3e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnerObstaculos
+  prefabObstaculo: {fileID: 4487758704763184152, guid: 38fa733c6e7cd7f47b0fadfe6143eade, type: 3}
+  tiempoInicial: 1
+  intervalo: 5
+--- !u!4 &1310054695
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310054693}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.70831996, z: -0, w: 0.7058916}
+  m_LocalPosition: {x: 155, y: 13, z: 39}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90.197, z: 0}
 --- !u!1 &1369277732
 GameObject:
   m_ObjectHideFlags: 0
@@ -1106,6 +1216,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1408072918
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1408072920}
+  - component: {fileID: 1408072919}
+  m_Layer: 0
+  m_Name: SpawnerObstaculos (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1408072919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408072918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c46cf15a9aa7040a0c68279d37a3e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnerObstaculos
+  prefabObstaculo: {fileID: 4487758704763184152, guid: 38fa733c6e7cd7f47b0fadfe6143eade, type: 3}
+  tiempoInicial: 5
+  intervalo: 5
+--- !u!4 &1408072920
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408072918}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.70831996, z: -0, w: 0.7058916}
+  m_LocalPosition: {x: 155, y: 13, z: 170}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90.197, z: 0}
 --- !u!1 &1538348189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1671,3 +1828,6 @@ SceneRoots:
   - {fileID: 1538348192}
   - {fileID: 331989644}
   - {fileID: 1369277733}
+  - {fileID: 1310054695}
+  - {fileID: 501730554}
+  - {fileID: 1408072920}
