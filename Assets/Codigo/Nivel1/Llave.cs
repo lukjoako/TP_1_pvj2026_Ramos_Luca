@@ -1,30 +1,30 @@
 using UnityEngine;
 using UnityEngine.InputSystem; // Requerido para el nuevo Input System
 
-public class ObjetoTransportable : MonoBehaviour
+public class Llave : MonoBehaviour
 {
     [Header("Configuración de Interacción")]
-    public float distanciaInteraccion = 3.0f; // Distancia máxima para presionar 'E'
+    public float distanciaInteraccion = 4.0f; // Distancia máxima para presionar 'E'
 
     private Transform jugadorTransform;
-    private Transform puntoMano;
+    private Transform puntoTransporte;
     private Rigidbody rb;
     private Collider col;
 
-    private bool estaAgarrado = false;
+    private bool estaAgarrada = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
 
-        // Buscar al Player por su Tag
+        // Buscar al jugador por Tag
         GameObject playerObj = GameObject.FindWithTag("Player");
         if (playerObj != null)
         {
             jugadorTransform = playerObj.transform;
-            // Busca el punto de transporte hijo en el personaje
-            puntoMano = jugadorTransform.Find("HoldPoint");
+            // Buscar el punto de transporte exacto en el jugador
+            puntoTransporte = jugadorTransform.Find("transporte");
         }
     }
 
@@ -39,14 +39,14 @@ public class ObjetoTransportable : MonoBehaviour
         }
         else
         {
-            presionoE = Input.GetKeyDown(KeyCode.E); // Fallback para el Input clásico
+            presionoE = Input.GetKeyDown(KeyCode.E); // Fallback clásico
         }
 
         if (presionoE)
         {
-            if (estaAgarrado)
+            if (estaAgarrada)
             {
-                SoltarObjeto();
+                SoltarLlave();
             }
             else
             {
@@ -55,40 +55,37 @@ public class ObjetoTransportable : MonoBehaviour
                     float distancia = Vector3.Distance(transform.position, jugadorTransform.position);
                     if (distancia <= distanciaInteraccion)
                     {
-                        AgarrarObjeto();
+                        AgarrarLlave();
                     }
                 }
             }
         }
     }
 
-    void AgarrarObjeto()
+    void AgarrarLlave()
     {
-        estaAgarrado = true;
+        estaAgarrada = true;
+        Quaternion rotacionOriginal = transform.rotation;
 
-        // Guardar la rotación del mundo tal cual está
-        Quaternion rotacionActual = transform.rotation;
-
-        // Emparentar al punto de transporte
-        if (puntoMano != null)
+        // 1. Emparentar al punto de transporte del jugador mediante SetParent()
+        if (puntoTransporte != null)
         {
-            transform.SetParent(puntoMano);
+            transform.SetParent(puntoTransporte);
             transform.localPosition = Vector3.zero;
         }
         else if (jugadorTransform != null)
         {
             transform.SetParent(jugadorTransform);
-            transform.localPosition = new Vector3(0, 1f, 1.2f);
+            transform.localPosition = new Vector3(0, 1.0f, 1.2f);
         }
 
-        // Mantener la rotación original del mundo
-        transform.rotation = rotacionActual;
+        transform.rotation = rotacionOriginal;
 
-        // Desactivar físicas durante el transporte
+        // 2. Control de física y colisiones durante el transporte
         if (rb != null)
         {
             rb.isKinematic = true;
-            rb.constraints = RigidbodyConstraints.FreezeRotation; // No rota durante el transporte
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
         if (col != null)
@@ -96,21 +93,27 @@ public class ObjetoTransportable : MonoBehaviour
             col.isTrigger = true;
         }
 
-        Debug.Log("Objeto agarrado.");
+        // 3. Notificar al sistema de victoria que tenemos la llave correcta
+        ControladorVictoria victoria = jugadorTransform.GetComponent<ControladorVictoria>();
+        if (victoria != null)
+        {
+            victoria.ObtenerObjeto();
+        }
+
+        Debug.Log("Llave recolectada y equipada.");
     }
 
-    void SoltarObjeto()
+    void SoltarLlave()
     {
-        estaAgarrado = false;
+        estaAgarrada = false;
 
-        // Desvincular del jugador
+        // Restablecer la independencia jerárquica
         transform.SetParent(null);
 
-        // Reactivar física sin rotaciones accidentales al caer
         if (rb != null)
         {
             rb.isKinematic = false;
-            rb.constraints = RigidbodyConstraints.FreezeRotation; // Sigue congelada al soltar
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
         if (col != null)
@@ -118,6 +121,11 @@ public class ObjetoTransportable : MonoBehaviour
             col.isTrigger = false;
         }
 
-        Debug.Log("Objeto soltado.");
+        Debug.Log("Llave soltada.");
+    }
+
+    public bool EstaAgarrada()
+    {
+        return estaAgarrada;
     }
 }

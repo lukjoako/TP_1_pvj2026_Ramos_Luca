@@ -1,10 +1,10 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // Requerido para el nuevo Input System
+using UnityEngine.InputSystem; // Requerido si utilizas el nuevo Input System
 
-public class ObjetoTransportable : MonoBehaviour
+public class ObjetoAgarrable : MonoBehaviour
 {
     [Header("Configuración de Interacción")]
-    public float distanciaInteraccion = 3.0f; // Distancia máxima para presionar 'E'
+    public float distanciaInteraccion = 3.0f; // Distancia máxima para poder presionar 'E'
 
     private Transform jugadorTransform;
     private Transform puntoMano;
@@ -18,19 +18,19 @@ public class ObjetoTransportable : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
 
-        // Buscar al Player por su Tag
+        // Buscar al Player por Tag
         GameObject playerObj = GameObject.FindWithTag("Player");
         if (playerObj != null)
         {
             jugadorTransform = playerObj.transform;
-            // Busca el punto de transporte hijo en el personaje
+            // Busca el punto de agarre hijo en el personaje
             puntoMano = jugadorTransform.Find("HoldPoint");
         }
     }
 
     void Update()
     {
-        // Lectura de la tecla 'E'
+        // Detectar si se presiona la tecla 'E'
         bool presionoE = false;
 
         if (Keyboard.current != null)
@@ -50,13 +50,11 @@ public class ObjetoTransportable : MonoBehaviour
             }
             else
             {
-                if (jugadorTransform != null)
+                // Verificar si el jugador está lo suficientemente cerca para agarrarlo
+                float distancia = Vector3.Distance(transform.position, jugadorTransform.position);
+                if (distancia <= distanciaInteraccion)
                 {
-                    float distancia = Vector3.Distance(transform.position, jugadorTransform.position);
-                    if (distancia <= distanciaInteraccion)
-                    {
-                        AgarrarObjeto();
-                    }
+                    AgarrarObjeto();
                 }
             }
         }
@@ -66,53 +64,48 @@ public class ObjetoTransportable : MonoBehaviour
     {
         estaAgarrado = true;
 
-        // Guardar la rotación del mundo tal cual está
-        Quaternion rotacionActual = transform.rotation;
-
-        // Emparentar al punto de transporte
+        // 1. Emparentar al punto de transporte del jugador (SetParent)
         if (puntoMano != null)
         {
             transform.SetParent(puntoMano);
             transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
         }
-        else if (jugadorTransform != null)
+        else
         {
             transform.SetParent(jugadorTransform);
             transform.localPosition = new Vector3(0, 1f, 1.2f);
         }
 
-        // Mantener la rotación original del mundo
-        transform.rotation = rotacionActual;
-
-        // Desactivar físicas durante el transporte
+        // 2. Desactivar físicas mientras se transporta
         if (rb != null)
         {
-            rb.isKinematic = true;
-            rb.constraints = RigidbodyConstraints.FreezeRotation; // No rota durante el transporte
+            rb.isKinematic = true; // Evita que la gravedad y las fuerzas afecten la caja
         }
 
+        // 3. Opcional: Desactivar o ajustar colisiones para que no empuje al jugador
         if (col != null)
         {
             col.isTrigger = true;
         }
 
-        Debug.Log("Objeto agarrado.");
+        Debug.Log("Objeto agarrado con la tecla E.");
     }
 
     void SoltarObjeto()
     {
         estaAgarrado = false;
 
-        // Desvincular del jugador
+        // 1. Restaurar independencia jerárquica (SetParent a null)
         transform.SetParent(null);
 
-        // Reactivar física sin rotaciones accidentales al caer
+        // 2. Reactivar física
         if (rb != null)
         {
             rb.isKinematic = false;
-            rb.constraints = RigidbodyConstraints.FreezeRotation; // Sigue congelada al soltar
         }
 
+        // 3. Reactivar colisiones sólidas
         if (col != null)
         {
             col.isTrigger = false;
