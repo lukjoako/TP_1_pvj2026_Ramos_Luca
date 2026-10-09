@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem; // Requerido para el nuevo Input System
 
-public class ObjetoTransportable : MonoBehaviour
+public class Caja : MonoBehaviour
 {
     [Header("Configuración de Interacción")]
-    public float distanciaInteraccion = 3.0f; // Distancia máxima para presionar 'E'
+    public float distanciaInteraccion = 3.0f; // Distancia máxima para poder presionar 'E'
 
     private Transform jugadorTransform;
-    private Transform puntoMano;
+    private Transform puntoTransporte;
     private Rigidbody rb;
     private Collider col;
 
@@ -18,13 +18,13 @@ public class ObjetoTransportable : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
 
-        // Buscar al Player por su Tag
+        // Buscar al Player por Tag
         GameObject playerObj = GameObject.FindWithTag("Player");
         if (playerObj != null)
         {
             jugadorTransform = playerObj.transform;
-            // Busca el punto de transporte hijo en el personaje
-            puntoMano = jugadorTransform.Find("HoldPoint");
+            // Buscar el punto de transporte exacto dentro del Player
+            puntoTransporte = jugadorTransform.Find("transporte");
         }
     }
 
@@ -39,7 +39,7 @@ public class ObjetoTransportable : MonoBehaviour
         }
         else
         {
-            presionoE = Input.GetKeyDown(KeyCode.E); // Fallback para el Input clásico
+            presionoE = Input.GetKeyDown(KeyCode.E); // Compatibilidad con Input clásico
         }
 
         if (presionoE)
@@ -66,58 +66,59 @@ public class ObjetoTransportable : MonoBehaviour
     {
         estaAgarrado = true;
 
-        // Guardar la rotación del mundo tal cual está
-        Quaternion rotacionActual = transform.rotation;
+        // Guardar rotación exacta para no alterarla al agarrar
+        Quaternion rotacionOriginal = transform.rotation;
 
-        // Emparentar al punto de transporte
-        if (puntoMano != null)
+        // 1. Emparentar con SetParent() al punto 'transporte'
+        if (puntoTransporte != null)
         {
-            transform.SetParent(puntoMano);
+            transform.SetParent(puntoTransporte);
             transform.localPosition = Vector3.zero;
         }
         else if (jugadorTransform != null)
         {
+            // Fallback si no encuentra el objeto 'transporte'
             transform.SetParent(jugadorTransform);
-            transform.localPosition = new Vector3(0, 1f, 1.2f);
+            transform.localPosition = new Vector3(0, 1.0f, 1.2f);
         }
 
-        // Mantener la rotación original del mundo
-        transform.rotation = rotacionActual;
+        // Mantener la rotación tal como estaba
+        transform.rotation = rotacionOriginal;
 
-        // Desactivar físicas durante el transporte
+        // 2. Control de física y colisiones durante el transporte
         if (rb != null)
         {
-            rb.isKinematic = true;
-            rb.constraints = RigidbodyConstraints.FreezeRotation; // No rota durante el transporte
+            rb.isKinematic = true; // Desactiva gravedad e impulsos
+            rb.constraints = RigidbodyConstraints.FreezeRotation; // Congela rotaciones
         }
 
         if (col != null)
         {
-            col.isTrigger = true;
+            col.isTrigger = true; // Desactiva la colisión física pesada con el jugador
         }
 
-        Debug.Log("Objeto agarrado.");
+        Debug.Log("Caja agarrada.");
     }
 
     void SoltarObjeto()
     {
         estaAgarrado = false;
 
-        // Desvincular del jugador
+        // 1. Restaurar independencia jerárquica (SetParent a null)
         transform.SetParent(null);
 
-        // Reactivar física sin rotaciones accidentales al caer
+        // 2. Restaurar física y colisiones
         if (rb != null)
         {
-            rb.isKinematic = false;
-            rb.constraints = RigidbodyConstraints.FreezeRotation; // Sigue congelada al soltar
+            rb.isKinematic = false; // Vuelve a reaccionar a la gravedad
+            rb.constraints = RigidbodyConstraints.FreezeRotation; // Evita que se vuelque al caer
         }
 
         if (col != null)
         {
-            col.isTrigger = false;
+            col.isTrigger = false; // Vuelve a ser un objeto sólido
         }
 
-        Debug.Log("Objeto soltado.");
+        Debug.Log("Caja soltada.");
     }
 }
